@@ -1,35 +1,23 @@
 ---
 - name: Install Docker
-  hosts: 107.23.19.235
+  hosts: all
   become: true
+
   tasks:
-    - name: Install dependencies
+    - name: Update apt cache
       apt:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
-
-    - name: Add Docker GPG key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker APT repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
-        state: present
+        update_cache: yes
+      when: ansible_os_family == 'Debian'
 
     - name: Install Docker
       apt:
-        name: docker-ce
+        name: docker.io
         state: present
+      when: ansible_os_family == 'Debian'
 
-    - name: Add user to the docker group
-      user:
-        name: "{{ ansible_ssh_user }}"
-        groups: docker
-        append: yes
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
