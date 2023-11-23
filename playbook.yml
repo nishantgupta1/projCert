@@ -1,6 +1,6 @@
 ---
 - name: Install Docker
-  hosts: localhost
+  hosts: ansible_nodes
   become: true
 
   tasks:
