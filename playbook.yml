@@ -14,6 +14,10 @@
         name: docker.io
         state: present
       when: ansible_os_family == 'Debian'
+      become: yes
+      vars:
+        ansible_ssh_private_key_file: /.ssh/authorized_keys
+
 
     - name: Start Docker service
       service:
